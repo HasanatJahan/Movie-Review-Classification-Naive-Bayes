@@ -7,7 +7,17 @@
     You will evaluate your classifier on the test partition. In addition to BOW features, you should experiment with addi- tional features. In that case, please provide a description of the features in your report. Save the parameters of your BOW model in a file called movie- review-BOW.NB. Report the accuracy of your program on the test data with BOW features.
 
 """
+
+
 import os
+import json
+
+# note: change this to take input from terminal regarding file name 
+vocab_file_path = 'movie-review-HW2/aclImdb/imdb.vocab'
+# file_path = 'movie-review-HW2/aclImdb/train'
+file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/train'
+# labels = ["pos", "neg"]
+
 
 """
 Open the vocabulary file 
@@ -18,16 +28,31 @@ def get_vocab_dict(vocab_file_path):
         vocab_dict = f.read().split()
     return vocab_dict
 
-vocab_file_path = 'movie-review-HW2/aclImdb/imdb.vocab'
 vocab_dict = get_vocab_dict(vocab_file_path)
-print(vocab_dict)
 
 """
-Create a dictionary of 
+Takes input text and creates word list 
 """
-def create_word_count_dict(input_text):
+def create_word_list(input_text, vocab_dict):
+    output_text_list = []
+    # identify punctuation to remove 
+    punctuation_to_remove = {'"', '"', '!', ':', ',', '.', ';', '(', ')', '{', '}', '[', ']', '/','\'', '\\'}
+    input_list = input_text.split(" ")
+
+    for word in input_list:
+        if word not in punctuation_to_remove and word in vocab_dict:
+            lower_word = word.lower()
+            output_text_list.append(lower_word)
+
+    return output_text_list
+
+
+"""
+Create a dictionary of word counts based on word list created from input text
+"""
+def create_word_count_dict(input_list):
     input_word_dict = dict()
-    for word in input_text:
+    for word in input_list:
         if word not in input_word_dict:
             input_word_dict[word] = 1
         else:
@@ -36,24 +61,32 @@ def create_word_count_dict(input_text):
 
 
 """
-Takes input text and creates word list 
+Now for the preprocess function 
 """
-def create_word_list(input_text, vocab):
-    output_text_list = []
-    # identify punctuation to remove 
-    punctuation_to_remove = {'"', '"', '!', ':', ',', '.', ';', '(', ')', '{', '}', '[', ']', '/','\'', '\\'}
-    
-    for word in input_text:
-        if word not in punctuation_to_remove:
-            lower_word = word.lower()
-            output_text_list.append(lower_word)
+def preprocess(vocab_dict):
+    feature_vectors = []
+    # labels = ["pos", "neg"]
+    labels = ["comedy", "action"]
+    type_of_data = os.path.abspath(os.path.join(file_path, os.pardir))
+    for dirname, _, filenames in os.walk(file_path):
+        label = os.path.basename(os.path.normpath(dirname))
+        print(label)
+        for filename in filenames:
+            if filename.endswith('.txt') and label in labels:
+                f = open(os.path.join(dirname, filename), "r")
+                output_word_list = create_word_list(f.read(), vocab_dict)
+                feature_dict = create_word_count_dict(output_word_list)
+                feature_vectors.append({label: feature_dict})
+                f.close()
 
-    return output_text_list
+    # after all the files have been read 
+    json_filename = type_of_data + '_feature_vectors.txt'
+    # now to write the feature vectors to the input file 
+    with open(json_filename, 'w') as outfile:
+        json.dump(feature_vectors, outfile)
 
 
-"""
-"""
-
+preprocess(vocab_dict)
 
 
 
