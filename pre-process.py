@@ -67,10 +67,10 @@ def preprocess(vocab_dict):
     feature_vectors = []
     # labels = ["pos", "neg"]
     labels = ["comedy", "action"]
-    type_of_data = os.path.abspath(os.path.join(file_path, os.pardir))
+    type_of_data = os.path.basename(os.path.normpath(file_path))
+    print(type_of_data)
     for dirname, _, filenames in os.walk(file_path):
         label = os.path.basename(os.path.normpath(dirname))
-        print(label)
         for filename in filenames:
             if filename.endswith('.txt') and label in labels:
                 f = open(os.path.join(dirname, filename), "r")
