@@ -11,12 +11,17 @@
 
 import os
 import json
+import string 
 
 # note: change this to take input from terminal regarding file name 
 vocab_file_path = 'movie-review-HW2/aclImdb/imdb.vocab'
+punctuation_list = string.punctuation 
+
 # file_path = 'movie-review-HW2/aclImdb/train'
-file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/train'
 # labels = ["pos", "neg"]
+
+# from here you have the test small files 
+file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/train'
 
 
 """
@@ -35,12 +40,14 @@ Takes input text and creates word list
 """
 def create_word_list(input_text, vocab_dict):
     output_text_list = []
-    # identify punctuation to remove 
-    punctuation_to_remove = {'"', '"', '!', ':', ',', '.', ';', '(', ')', '{', '}', '[', ']', '/','\'', '\\'}
-    input_list = input_text.split(" ")
+    
+    table_ = str.maketrans('', '', punctuation_list)
+    modified_input_text = input_text.translate(table_)
+
+    input_list = modified_input_text.split(" ")
 
     for word in input_list:
-        if word not in punctuation_to_remove and word in vocab_dict:
+        if word in vocab_dict:
             lower_word = word.lower()
             output_text_list.append(lower_word)
 
@@ -56,7 +63,9 @@ def create_word_count_dict(input_list):
         if word not in input_word_dict:
             input_word_dict[word] = 1
         else:
-            input_word_dict[word] += 1   
+            input_word_dict[word] += 1  
+
+    print(input_word_dict) 
     return input_word_dict
 
 
@@ -68,7 +77,6 @@ def preprocess(vocab_dict):
     # labels = ["pos", "neg"]
     labels = ["comedy", "action"]
     type_of_data = os.path.basename(os.path.normpath(file_path))
-    print(type_of_data)
     for dirname, _, filenames in os.walk(file_path):
         label = os.path.basename(os.path.normpath(dirname))
         for filename in filenames:
