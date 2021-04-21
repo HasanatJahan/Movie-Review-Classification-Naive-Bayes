@@ -21,8 +21,13 @@ punctuation_list = string.punctuation
 # labels = ["pos", "neg"]
 
 # from here you have the test small files 
-file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/train'
-main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review'
+# for train
+# file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/train'
+
+# for test
+file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/test'
+
+main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors'
 
 """
 Open the vocabulary file 
@@ -41,13 +46,20 @@ Takes input text and creates word list
 def create_word_list(input_text, vocab_dict):
     output_text_list = []
     
+    # remove punctuation
     table_ = str.maketrans('', '', punctuation_list)
     modified_input_text = input_text.translate(table_)
 
+    # create input word list 
     input_list = modified_input_text.split(" ")
 
     for word in input_list:
-        if word in vocab_dict:
+        # if word in vocab_dict:
+        #     lower_word = word.lower()
+        #     output_text_list.append(lower_word)
+
+        # this part is only for the small review preprocessing
+        if word != "\n":
             lower_word = word.lower()
             output_text_list.append(lower_word)
 
@@ -65,7 +77,6 @@ def create_word_count_dict(input_list):
         else:
             input_word_dict[word] += 1  
 
-    print(input_word_dict) 
     return input_word_dict
 
 
@@ -82,6 +93,17 @@ def write_json(target_path, target_file, feature_vectors):
     with open(os.path.join(target_path, target_file), 'w') as outfile:
         json.dump(feature_vectors, outfile)
 
+"""
+Find the directory contents- find the directory name for labels
+"""
+def find_labels(file_path):
+    labels = []
+    directory_contents = os.listdir(file_path)
+    # print(directory_contents)
+    for item in directory_contents:
+        if os.path.isdir(os.path.join(file_path, item)):
+            labels.append(item)
+    return labels
 
 """
 Now for the preprocess function 
@@ -89,7 +111,10 @@ Now for the preprocess function
 def preprocess(vocab_dict):
     feature_vectors = []
     # labels = ["pos", "neg"]
-    labels = ["comedy", "action"]
+    # labels = ["comedy", "action"]
+    labels = find_labels(file_path)
+    print(f'this is labels {labels}')
+
     type_of_data = os.path.basename(os.path.normpath(file_path))
     for dirname, _, filenames in os.walk(file_path):
         label = os.path.basename(os.path.normpath(dirname))
