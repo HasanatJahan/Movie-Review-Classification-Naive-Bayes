@@ -22,7 +22,7 @@ punctuation_list = string.punctuation
 
 # from here you have the test small files 
 file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/train'
-
+main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review'
 
 """
 Open the vocabulary file 
@@ -70,6 +70,20 @@ def create_word_count_dict(input_list):
 
 
 """
+Reference: https://stackoverflow.com/questions/64196315/json-dump-into-specific-folder
+"""
+def write_json(target_path, target_file, feature_vectors):
+    if not os.path.exists(target_path):
+        try:
+            os.makedirs(target_path)
+        except Exception as e:
+            print(e)
+            raise 
+    with open(os.path.join(target_path, target_file), 'w') as outfile:
+        json.dump(feature_vectors, outfile)
+
+
+"""
 Now for the preprocess function 
 """
 def preprocess(vocab_dict):
@@ -88,12 +102,16 @@ def preprocess(vocab_dict):
                 f.close()
 
     # after all the files have been read 
-    json_filename = type_of_data + '_feature_vectors.txt'
+    json_filename = type_of_data + '_feature_vectors.json'
     # now to write the feature vectors to the input file 
-    with open(json_filename, 'w') as outfile:
-        json.dump(feature_vectors, outfile)
+    # with open(json_filename, 'w') as outfile:
+    #     json.dump(feature_vectors, outfile)
+    write_json(main_directory_path, json_filename, feature_vectors)
 
 
+"""
+Now to call all necessary functions for preprocessing 
+"""
 preprocess(vocab_dict)
 
 
