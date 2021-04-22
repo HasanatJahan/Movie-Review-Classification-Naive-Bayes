@@ -26,17 +26,17 @@ output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.tx
 
 
 def build_parameter_file(training_file, parameter_file):
+    model_parameter_dict = dict()
+
     # open training file and read through it 
     f = open(training_file)
     training_data = json.load(f)
     f.close()
 
     # get the number of documents 
-    # print(training_data)
     num_document = len(training_data)
 
     label_dict = dict()
-
     # iterate through the dictionary to draw out the labels to create prior probability 
     for i in training_data:
         for j in i:
@@ -44,11 +44,22 @@ def build_parameter_file(training_file, parameter_file):
                 label_dict[j] = 1
             else:
                 label_dict[j] += 1  
+
+    # now to calculate prior probability of each label 
+    for label in label_dict:
+        prior_prob = label_dict[label]/num_document
+        # append it to the dictionary 
+        prob_label_name = "P(" +  label   + ")"
+        # print(prob_label_name)
+        model_parameter_dict[prob_label_name] = prior_prob
+    
+    print(model_parameter_dict)
+    
     
 
 
 def run_naive_bayes(training_file, testing_file, parameter_file, output_prediction_file):
-    print("running")
+    print()
 
 
 build_parameter_file(training_file, parameter_file)
