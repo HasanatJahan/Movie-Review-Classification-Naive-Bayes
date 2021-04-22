@@ -1,4 +1,10 @@
 """
+Name: Hasanat Jahan
+Homework 2 Naive Bayes Implementation on Movie Review 
+"""
+
+
+"""
     Pre-processing: prior to building feature vectors, 
     1. you should separate punctuation from words 
     2. lowercase the words in the reviews. 

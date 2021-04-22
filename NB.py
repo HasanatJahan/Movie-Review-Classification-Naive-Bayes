@@ -1,4 +1,9 @@
 """
+Name: Hasanat Jahan
+Homework 2 Naive Bayes Implementation on Movie Review 
+"""
+
+"""
 should take the following parameters: 
 - the training file 
 - the test file 
@@ -25,6 +30,24 @@ parameter_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/movie_
 output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.txt'
 
 
+"""
+Function used to iterate through the nested dictionary 
+"""
+def get_all_words(dictionary, output_dict):
+    for key, value in dictionary.items():
+        if type(value) is dict:
+            get_all_words(value, output_dict)
+        else:
+            if key not in output_dict:
+                output_dict[key] = 1
+            else:
+                output_dict[key] += 1 
+
+
+
+"""
+Function used to build the model parameters that would store the model parameters in a file
+"""
 def build_parameter_file(training_file, parameter_file):
     model_parameter_dict = dict()
 
@@ -37,6 +60,7 @@ def build_parameter_file(training_file, parameter_file):
     num_document = len(training_data)
 
     label_dict = dict()
+    all_training_word_dict = dict()
     # iterate through the dictionary to draw out the labels to create prior probability 
     for i in training_data:
         for j in i:
@@ -44,6 +68,10 @@ def build_parameter_file(training_file, parameter_file):
                 label_dict[j] = 1
             else:
                 label_dict[j] += 1  
+
+            get_all_words(i, all_training_word_dict)    
+
+    print(all_training_word_dict)
 
     # now to calculate prior probability of each label 
     for label in label_dict:
@@ -53,7 +81,9 @@ def build_parameter_file(training_file, parameter_file):
         # print(prob_label_name)
         model_parameter_dict[prob_label_name] = prior_prob
     
-    print(model_parameter_dict)
+    # # now to get all words so as find the size of the vocabulary
+    # get_all_words(training_data, all_training_word_dict)
+    # print(all_training_word_dict)
     
     
 
