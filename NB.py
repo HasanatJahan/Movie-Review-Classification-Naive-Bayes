@@ -77,12 +77,14 @@ def build_parameter_file(training_file, parameter_file):
 
 
     num_vocab = len(vocab_dict)
-    print(f"classBOW {class_BOW}")
-    print(f"Number of words in class {num_of_words_in_class}")
-    print(f"Label dict {label_dict}")
-    print(f"vocab dict {vocab_dict}")
 
-    # now to calculate prior probability of each label 
+    # print(f"This is num vocab {num_vocab}")
+    # print(f"classBOW {class_BOW}")
+    # print(f"Number of words in class {num_of_words_in_class}")
+    # print(f"Label dict {label_dict}")
+    # print(f"vocab dict {vocab_dict}")
+
+    # now to calculate prior probability of each label and add it to dictionary 
     for label in label_dict:
         prior_prob = label_dict[label]/num_document
         # append it to the dictionary 
@@ -90,10 +92,17 @@ def build_parameter_file(training_file, parameter_file):
         # print(prob_label_name)
         model_parameter_dict[prob_label_name] = prior_prob
 
-    # now to create the parameters 
 
-
+    # print(f"Model parameters {model_parameter_dict}")
+    # now to create the BOW parameters with add one smoothing 
+    for label, word_dict in class_BOW.items():
+        for word, word_count in word_dict.items():
+            calculated_prob = (class_BOW[label][word] + 1)/(num_of_words_in_class[label] + num_vocab)
+            prob_label_name = "P(" +  word   + "|" + label + ")"
+            # print(prob_label_name, calculated_prob)
+            model_parameter_dict[prob_label_name] = calculated_prob
     
+    # print(model_parameter_dict)
     
 
 
