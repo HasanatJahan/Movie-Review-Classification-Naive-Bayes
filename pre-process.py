@@ -62,7 +62,8 @@ def create_word_list(input_text, vocab_dict):
 
     for word in input_list:
         # this part for the larger processing 
-        # if word in vocab_dict:
+        # NOTE: don't need this if word in vocab_dict:
+        #     word = word.strip('\n')
         #     lower_word = word.lower()
         #     output_text_list.append(lower_word)
 

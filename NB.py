@@ -158,34 +158,52 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
 
 
 
-    # # go through each file 
-    # for vector in testing_data:
-    #     max_val = 0
-    #     predicted_label = ""
-    #     vector_dict = dict()
-    #     vector_dict["Example"] = example_num
-    #     example_num += 1  
-    #     for key, value in vector.items():
-    #         for label in label_dict:
-    #             label_col_name = label + " Prediction"
-    #             for word, word_count in value.items():
-    #                 prob_name = "P(" +  word   + "|" + label + ")"
-    #                 print(f"this is model {model_parameter_dict[prob_name]}")
-    #                 if label_col_name not in vector_dict:
-    #                     vector_dict[label_col_name] = math.e(model_parameter_dict[prob_name])
-    #                 else:
-    #                     vector_dict[label_col_name] += math.e(model_parameter_dict[prob_name])
-    #             if vector_dict[label_col_name] > max_val:
-    #                 max_val = vector_dict[label_col_name]
-    #                 predicted_label = label_col_name
-    #             vector_dict["Predicted Label"] = label_col_name
-            
-    #         actual_label = key
-    #         vector_dict["Actual Label"] = key
-    #     output_file_dict.append(vector_dict)
+    # go through each file 
 
-    # print("This is the output prediction dict")                
-    # print(output_file_dict)
+    for vector in testing_data:
+        max_val = -10000000
+        predicted_label = ""
+        vector_dict = dict()
+        vector_dict["Example"] = example_num
+        
+        for key, value in vector.items():
+            for label in label_dict:
+                label_col_name = label + " Prediction"
+                label_prob_name  = "P("+ label + ")"
+                for word, word_count in value.items():
+                    prob_name = "P(" +  word   + "|" + label + ")"
+                    if label_col_name in vector_dict:
+
+                        # NOTE: checking the dict is only added in for the small movie review 
+                        # words not in vocab should be added in with 0 
+                        # ONLY FOR THIS ONE SMALL - DELETE BLOCK LATER 
+                        if prob_name not in parameter_dict and label == "comedy":
+                            param_val = 1/16
+                        elif prob_name not in parameter_dict and label == "action":
+                            param_val = 1/18
+                        else:
+                            param_val = parameter_dict[prob_name]
+                        
+                        vector_dict[label_col_name] += math.log10(param_val)
+
+                        # vector_dict[label_col_name] += math.log10(parameter_dict[prob_name])
+
+
+                    else:
+                        vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name]))
+
+                if vector_dict[label_col_name] > max_val:
+                    max_val = vector_dict[label_col_name]
+                    predicted_label = label
+            
+            vector_dict["Predicted Label"] = predicted_label
+            actual_label = key
+            vector_dict["Actual Label"] = key
+
+        output_file_dict[example_num] = vector_dict
+        example_num += 1  
+
+    print(output_file_dict)
 
 
 
