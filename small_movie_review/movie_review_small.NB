@@ -1,0 +1,15 @@
+{
+    "P(comedy)": 0.4,
+    "P(action)": 0.6,
+    "P(fun|comedy)": 0.25,
+    "P(couple|comedy)": 0.1875,
+    "P(love|comedy)": 0.1875,
+    "P(fly|comedy)": 0.125,
+    "P(fast|comedy)": 0.125,
+    "P(fly|action)": 0.1111111111111111,
+    "P(fast|action)": 0.16666666666666666,
+    "P(shoot|action)": 0.2777777777777778,
+    "P(love|action)": 0.1111111111111111,
+    "P(furious|action)": 0.16666666666666666,
+    "P(fun|action)": 0.1111111111111111
+}

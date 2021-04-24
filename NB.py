@@ -19,6 +19,7 @@ and the other columns are feature values.
 """
 
 import json
+import os 
 
 # Here we would have input from the command line but for how we have placeholders 
 
@@ -103,6 +104,22 @@ def build_parameter_file(training_file, parameter_file):
             model_parameter_dict[prob_label_name] = calculated_prob
     
     # print(model_parameter_dict)
+    # now to write to the parameter file 
+    if not os.path.exists(parameter_file):
+        try:
+            os.makedirs(parameter_file)
+        except Exception as e:
+            print(e)
+            raise
+
+    param_filename = os.path.split(parameter_file)[1]
+    param_path = os.path.split(param_filename)
+    param_path = os.path.dirname(os.path.normpath(parameter_file))
+
+    print(f"param path {param_path}")
+    print(f"param filename {param_filename}")
+    with open(os.path.join(param_path, param_filename), 'w') as outfile:
+        outfile.write(json.dumps(model_parameter_dict, indent=4))
     
 
 
