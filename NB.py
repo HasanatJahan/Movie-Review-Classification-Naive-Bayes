@@ -22,27 +22,11 @@ import json
 
 # Here we would have input from the command line but for how we have placeholders 
 
-
 # trying with the small file 
 training_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/train_feature_vectors.json'
 testing_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/test_feature_vectors.json'
 parameter_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/movie_review_small.NB'
 output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.txt'
-
-
-"""
-Function used to iterate through the nested dictionary 
-"""
-def get_all_words(dictionary, output_dict):
-    for key, value in dictionary.items():
-        if type(value) is dict:
-            get_all_words(value, output_dict)
-        else:
-            if key not in output_dict:
-                output_dict[key] = 1
-            else:
-                output_dict[key] += 1 
-
 
 
 """
@@ -56,22 +40,47 @@ def build_parameter_file(training_file, parameter_file):
     training_data = json.load(f)
     f.close()
 
+    # NOTE USE THE ORIGINAL TRAINING DATA FOR EASIER DOCUMENT COUNTING 
     # get the number of documents 
     num_document = len(training_data)
-
     label_dict = dict()
-    all_training_word_dict = dict()
+    class_BOW = dict()
+    num_of_words_in_class = dict()
+    vocab_dict = dict()
+
     # iterate through the dictionary to draw out the labels to create prior probability 
     for i in training_data:
-        for j in i:
-            if j not in label_dict:
-                label_dict[j] = 1
+        for key, value in i.items():
+            if key not in label_dict:
+                label_dict[key] = 1 
+                # declare an empty dict here 
+                class_BOW[key] = {}               
             else:
-                label_dict[j] += 1  
+                label_dict[key] += 1 
+            
+            
+            for word, word_count in value.items():
+                if key in num_of_words_in_class:
+                    num_of_words_in_class[key] += word_count
+                else:
+                    num_of_words_in_class[key] = word_count
+                
+                if word not in vocab_dict:
+                    vocab_dict[word] = word_count
+                else:
+                    vocab_dict[word] += word_count
 
-            get_all_words(i, all_training_word_dict)    
+                if word not in class_BOW[key]:
+                    class_BOW[key][word] = word_count
+                else:
+                    class_BOW[key][word] += word_count
 
-    print(all_training_word_dict)
+
+    num_vocab = len(vocab_dict)
+    print(f"classBOW {class_BOW}")
+    print(f"Number of words in class {num_of_words_in_class}")
+    print(f"Label dict {label_dict}")
+    print(f"vocab dict {vocab_dict}")
 
     # now to calculate prior probability of each label 
     for label in label_dict:
@@ -80,10 +89,10 @@ def build_parameter_file(training_file, parameter_file):
         prob_label_name = "P(" +  label   + ")"
         # print(prob_label_name)
         model_parameter_dict[prob_label_name] = prior_prob
-    
-    # # now to get all words so as find the size of the vocabulary
-    # get_all_words(training_data, all_training_word_dict)
-    # print(all_training_word_dict)
+
+    # now to create the parameters 
+
+
     
     
 

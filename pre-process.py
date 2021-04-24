@@ -60,6 +60,7 @@ def create_word_list(input_text, vocab_dict):
     input_list = modified_input_text.split(" ")
 
     for word in input_list:
+        # this part for the larger processing 
         # if word in vocab_dict:
         #     lower_word = word.lower()
         #     output_text_list.append(lower_word)
@@ -97,7 +98,8 @@ def write_json(target_path, target_file, feature_vectors):
             print(e)
             raise 
     with open(os.path.join(target_path, target_file), 'w') as outfile:
-        json.dump(feature_vectors, outfile)
+        for vector in feature_vectors:
+            json.dump(vector + "\n", outfile)
 
 """
 Find the directory contents- find the directory name for labels
@@ -115,11 +117,12 @@ def find_labels(file_path):
 Now for the preprocess function 
 """
 def preprocess(vocab_dict):
-    feature_vectors = []
+    # feature_vectors = []
+    feature_vectors = dict()
+    
     # labels = ["pos", "neg"]
     # labels = ["comedy", "action"]
     labels = find_labels(file_path)
-    print(f'this is labels {labels}')
 
     type_of_data = os.path.basename(os.path.normpath(file_path))
     for dirname, _, filenames in os.walk(file_path):
@@ -133,10 +136,9 @@ def preprocess(vocab_dict):
                 f.close()
 
     # after all the files have been read 
+    # the file name would be different for movie review 
     json_filename = type_of_data + '_feature_vectors.json'
-    # now to write the feature vectors to the input file 
-    # with open(json_filename, 'w') as outfile:
-    #     json.dump(feature_vectors, outfile)
+
     write_json(main_directory_path, json_filename, feature_vectors)
 
 
