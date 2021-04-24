@@ -103,6 +103,10 @@ def build_parameter_file(training_file, parameter_file):
             # print(prob_label_name, calculated_prob)
             model_parameter_dict[prob_label_name] = calculated_prob
     
+ 
+    # NOTE: CREATE MORE EXPERIMENTAL PARAMS HERE 
+
+
     # print(model_parameter_dict)
     # now to write to the parameter file 
     if not os.path.exists(parameter_file):
@@ -113,20 +117,16 @@ def build_parameter_file(training_file, parameter_file):
             raise
 
     param_filename = os.path.split(parameter_file)[1]
-    param_path = os.path.split(param_filename)
     param_path = os.path.dirname(os.path.normpath(parameter_file))
-
-    print(f"param path {param_path}")
-    print(f"param filename {param_filename}")
     with open(os.path.join(param_path, param_filename), 'w') as outfile:
         outfile.write(json.dumps(model_parameter_dict, indent=4))
     
 
 
-def run_naive_bayes(training_file, testing_file, parameter_file, output_prediction_file):
+def naive_bayes(model_parameter_dict, testing_file, output_prediction_file):
     print()
 
 
 build_parameter_file(training_file, parameter_file)
-run_naive_bayes(training_file, testing_file, parameter_file, output_file)
+naive_bayes(training_file, testing_file, parameter_file, output_file)
 

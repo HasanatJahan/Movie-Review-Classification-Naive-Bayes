@@ -28,10 +28,11 @@ punctuation_list = string.punctuation
 
 # from here you have the test small files 
 # for train
-# file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/train'
+file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/train'
 
 # for test
-file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/test'
+# file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/test'
+
 
 main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors'
 
@@ -98,8 +99,7 @@ def write_json(target_path, target_file, feature_vectors):
             print(e)
             raise 
     with open(os.path.join(target_path, target_file), 'w') as outfile:
-        for vector in feature_vectors:
-            json.dump(vector + "\n", outfile)
+        outfile.write(json.dumps(feature_vectors, indent=4))
 
 """
 Find the directory contents- find the directory name for labels
@@ -117,8 +117,8 @@ def find_labels(file_path):
 Now for the preprocess function 
 """
 def preprocess(vocab_dict):
-    # feature_vectors = []
-    feature_vectors = dict()
+    feature_vectors = []
+    # feature_vectors = dict()
     
     # labels = ["pos", "neg"]
     # labels = ["comedy", "action"]
