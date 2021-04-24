@@ -20,7 +20,7 @@ and the other columns are feature values.
 
 import json
 import os 
-
+import math
 # Here we would have input from the command line but for how we have placeholders 
 
 # trying with the small file 
@@ -33,7 +33,7 @@ output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.tx
 """
 Function used to build the model parameters that would store the model parameters in a file
 """
-def build_parameter_file(training_file, parameter_file):
+def build_parameter_file(training_file, testing_file, parameter_file, output_file):
     model_parameter_dict = dict()
 
     # open training file and read through it 
@@ -41,7 +41,6 @@ def build_parameter_file(training_file, parameter_file):
     training_data = json.load(f)
     f.close()
 
-    # NOTE USE THE ORIGINAL TRAINING DATA FOR EASIER DOCUMENT COUNTING 
     # get the number of documents 
     num_document = len(training_data)
     label_dict = dict()
@@ -122,11 +121,74 @@ def build_parameter_file(training_file, parameter_file):
         outfile.write(json.dumps(model_parameter_dict, indent=4))
     
 
+    # call naive bayes 
+    naive_bayes(parameter_file, testing_file, output_file, label_dict)
 
-def naive_bayes(model_parameter_dict, testing_file, output_prediction_file):
-    print()
+    
 
 
-build_parameter_file(training_file, parameter_file)
-naive_bayes(training_file, testing_file, parameter_file, output_file)
+def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, label_dict):
+    # NOTE: THE TESTING FILE CONTAINS THE FEATURE VECTORS
+    # NOTE: PLAN - DO NAIVE BAYES FOR BOTH LABELS - CREATE A GENERAL NAIVE BAYES FUNCTION
+    # AND THEN COMPARE THE VALUE RETURNED BY BOTH LABELS AND PICK THE ONE WITH THE LARGER VALUE 
+    # THEN OUTPUT THE PREDICTED LABEL AND OUTPUT LABEL FOR ALL 
+    # NOTE: ALSO INLCUDE THE PROBABILITIES OF EACH CLASS 
+
+
+    # NOTE: FIND A WAY TO DO ACCURACY 
+    # label_evaluation = z
+    # label evaluation has document number,  
+    # prob of each label, 
+    # predicted label 
+    # actual label,
+
+    output_file_dict = dict()
+    num_correct = 0
+    num_of_test_docs = len(testing_file)
+    example_num = 1
+    parameter_dict = dict()
+    
+    f = open(testing_file)
+    testing_data = json.load(f)
+    f.close()
+
+    f = open(model_parameter_dict)
+    parameter_dict = json.load(f)
+    f.close
+
+
+
+    # # go through each file 
+    # for vector in testing_data:
+    #     max_val = 0
+    #     predicted_label = ""
+    #     vector_dict = dict()
+    #     vector_dict["Example"] = example_num
+    #     example_num += 1  
+    #     for key, value in vector.items():
+    #         for label in label_dict:
+    #             label_col_name = label + " Prediction"
+    #             for word, word_count in value.items():
+    #                 prob_name = "P(" +  word   + "|" + label + ")"
+    #                 print(f"this is model {model_parameter_dict[prob_name]}")
+    #                 if label_col_name not in vector_dict:
+    #                     vector_dict[label_col_name] = math.e(model_parameter_dict[prob_name])
+    #                 else:
+    #                     vector_dict[label_col_name] += math.e(model_parameter_dict[prob_name])
+    #             if vector_dict[label_col_name] > max_val:
+    #                 max_val = vector_dict[label_col_name]
+    #                 predicted_label = label_col_name
+    #             vector_dict["Predicted Label"] = label_col_name
+            
+    #         actual_label = key
+    #         vector_dict["Actual Label"] = key
+    #     output_file_dict.append(vector_dict)
+
+    # print("This is the output prediction dict")                
+    # print(output_file_dict)
+
+
+
+
+build_parameter_file(training_file, testing_file, parameter_file, output_file)
 
