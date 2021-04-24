@@ -1,1 +1,10 @@
-{}
+[
+    {
+        "unknown": {
+            "fast": 1,
+            "couple": 1,
+            "shoot": 1,
+            "fly": 1
+        }
+    }
+]

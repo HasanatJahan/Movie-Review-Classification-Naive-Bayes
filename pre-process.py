@@ -28,10 +28,10 @@ punctuation_list = string.punctuation
 
 # from here you have the test small files 
 # for train
-file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/train'
+# file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/train'
 
 # for test
-# file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/test'
+file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/test'
 
 
 main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors'
@@ -68,6 +68,7 @@ def create_word_list(input_text, vocab_dict):
 
         # this part is only for the small review preprocessing
         if word != "\n":
+            word = word.strip('\n')
             lower_word = word.lower()
             output_text_list.append(lower_word)
 
@@ -118,7 +119,6 @@ Now for the preprocess function
 """
 def preprocess(vocab_dict):
     feature_vectors = []
-    # feature_vectors = dict()
     
     # labels = ["pos", "neg"]
     # labels = ["comedy", "action"]
