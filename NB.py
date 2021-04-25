@@ -3,21 +3,6 @@ Name: Hasanat Jahan
 Homework 2 Naive Bayes Implementation on Movie Review 
 """
 
-"""
-should take the following parameters: 
-- the training file 
-- the test file 
-- the file where the parameters of the resulting model will be saved 
-- the output file where you will write predictions made by the classifier 
-on the test data (one example per line). 
-The last line in the output file should list the overall accuracy of 
-the classifier on the test data. 
-The training and the test files should have the following format: 
-one example per line; each line corresponds to an example; 
-first column is the label, 
-and the other columns are feature values.
-"""
-
 import json
 import os 
 import math
@@ -197,9 +182,10 @@ def write_to_output_file(output_file_dict, output_file, accuracy, num_correct, n
         for vector in output_file_dict:
             col_string = ""
             for column in output_file_dict[vector].items():
-
+                # top row in output        
                 if count == 0:
                     first_row_text += "|   " + str(column[0]) +  "    "
+                # for all values in all files 
                 col_string += "          " + str(column[1]) 
             
             if count == 0:
@@ -330,8 +316,6 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
         # Now to write to output file 
         write_to_output_file(output_file_dict, output_prediction_file, accuracy, num_correct, num_incorrect, num_of_test_docs)
 
-
-# build_parameter_file(training_file, testing_file, parameter_file, output_file)
 
 
 initialize_classifier()

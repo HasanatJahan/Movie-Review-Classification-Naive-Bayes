@@ -3,18 +3,6 @@ Name: Hasanat Jahan
 Homework 2 Naive Bayes Implementation on Movie Review 
 """
 
-
-"""
-    Pre-processing: prior to building feature vectors, 
-    1. you should separate punctuation from words 
-    2. lowercase the words in the reviews. 
-    3. You will train NB classifier on the training partition using the BOW features 
-    4. (use add-one smoothing, as we did in class). 
-    You will evaluate your classifier on the test partition. In addition to BOW features, you should experiment with addi- tional features. In that case, please provide a description of the features in your report. Save the parameters of your BOW model in a file called movie- review-BOW.NB. Report the accuracy of your program on the test data with BOW features.
-
-"""
-
-
 import os
 import json
 import string 
@@ -61,12 +49,6 @@ def create_word_list(input_text, vocab_dict):
     input_list = modified_input_text.split(" ")
 
     for word in input_list:
-        # this part for the larger processing 
-        # NOTE: don't need this if word in vocab_dict:
-        #     word = word.strip('\n')
-        #     lower_word = word.lower()
-        #     output_text_list.append(lower_word)
-
         # this part is only for the small review preprocessing
         if word != "\n" and word in vocab_dict:
             word = word.strip('\n')
