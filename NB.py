@@ -23,10 +23,10 @@ import os
 import math
 # Here we would have input from the command line but for how we have placeholders 
 
-training_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/train_feature_vectors.json'
-testing_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/test_feature_vectors.json'
-parameter_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/movie_review_small.NB'
-output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.txt'
+training_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
+testing_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
+parameter_file = 'movie-review-HW2/movie-review-BOW.NB'
+output_file = 'movie-review-HW2/output.txt'
 
 
 # trying with the small file 
@@ -128,12 +128,12 @@ def build_parameter_file(training_file, testing_file, parameter_file, output_fil
     
 
     # call naive bayes 
-    naive_bayes(parameter_file, testing_file, output_file, label_dict)
+    naive_bayes(parameter_file, testing_file, output_file, label_dict, num_vocab, num_of_words_in_class)
 
 
 
-def write_to_output_file(output_file_dict, output_file):
-    first_row_text = ""
+def write_to_output_file(output_file_dict, output_file, accuracy):
+    first_row_text = "   "
     count = 0
 
     with open(os.path.normpath(output_file), 'w') as outfile:
@@ -149,11 +149,13 @@ def write_to_output_file(output_file_dict, output_file):
                 outfile.write(first_row_text + "\n")
             outfile.write(col_string + "\n")
             count+=1
+        
+        outfile.write("Accuracy: " + str(accuracy) + "%\n")
             
                 
 
 
-def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, label_dict):
+def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, label_dict, num_vocab, num_of_words_in_class):
     output_file_dict = dict()
     num_correct = 0
     num_of_test_docs = len(testing_file)
@@ -181,25 +183,23 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
                 label_prob_name  = "P("+ label + ")"
                 for word, word_count in value.items():
                     prob_name = "P(" +  word   + "|" + label + ")"
-                    if label_col_name in vector_dict:
 
-                        # NOTE: checking the dict is only added in for the small movie review 
-                        # words not in vocab should be added in with 0 
-                        # if prob_name not in parameter_dict and label == "comedy":
-                        #     param_val = 1/16
-                        # elif prob_name not in parameter_dict and label == "action":
-                        #     param_val = 1/18
-                        # else:
+                    # this is to deal with test words not in train
+                    if prob_name not in parameter_dict:
+                        parameter_dict[prob_name] = 1 / (num_of_words_in_class[label] + num_vocab)
+
+
+                    if label_col_name in vector_dict:
                         param_val = parameter_dict[prob_name]
                         vector_dict[label_col_name] += math.log10(param_val)
-
-                        # vector_dict[label_col_name] += math.log10(parameter_dict[prob_name])
-
-
                     else:
                         vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name]))
+                
+                # NOTE: WAS UPTO HERE - WHY IS LABEL COL NAME GIVING KEYERROR
+                # NOTE: this does not seem like a good solution but I will check again
 
-                if vector_dict[label_col_name] > max_val:
+
+                if label_col_name in vector_dict and vector_dict[label_col_name] > max_val:
                     max_val = vector_dict[label_col_name]
                     predicted_label = label
             
@@ -207,11 +207,16 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
             actual_label = key
             vector_dict["Actual Label"] = key
 
+            if vector_dict["Predicted Label"] == vector_dict["Actual Label"]:
+                num_correct += 1
+
         output_file_dict[example_num] = vector_dict
         example_num += 1  
 
+    # calculate the accuracy 
+    accuracy = (num_correct / len(testing_data)) * 100
     # Now to write to output file 
-    write_to_output_file(output_file_dict, output_prediction_file)
+    write_to_output_file(output_file_dict, output_prediction_file, accuracy)
 
 
 build_parameter_file(training_file, testing_file, parameter_file, output_file)
