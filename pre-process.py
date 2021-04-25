@@ -22,7 +22,11 @@ import string
 # note: change this to take input from terminal regarding file name 
 vocab_file_path = 'movie-review-HW2/aclImdb/imdb.vocab'
 punctuation_list = string.punctuation 
-file_path = 'movie-review-HW2/aclImdb/train'
+# for training data 
+# file_path = 'movie-review-HW2/aclImdb/train'
+
+# for test data 
+file_path = 'movie-review-HW2/aclImdb/test'
 main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/movie-review-HW2/feature_vectors'
 
 # from here you have the test small files 
