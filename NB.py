@@ -58,25 +58,25 @@ def initialize_classifier():
     if num == 4:
         print("Input path of training folder with label folders inside")
         training_file = str(input())
-        while not path.exists(training_file):
+        while not os.path.exists(training_file):
             print("Not a valid path - please try again")
             training_file = str(input())
         
         print("Input path of testing folder with label folders inside")
         testing_file = str(input())
-        while not path.exists(testing_file):
+        while not os.path.exists(testing_file):
             print("Not a valid path - please try again")
             testing_file = str(input())
         
         print("Input path of parameter file - it should be a .NB format")
         parameter_file = str(input())
-        while not path.exists(parameter_file):
+        while not os.path.exists(parameter_file):
             print("Not a valid path - please try again")
             parameter_file = str(input())
 
         print("Input path of output file - it should be a .txt format for easy reading")
         output_file = str(input())
-        while not path.exists(output_file):
+        while not os.path.exists(output_file):
             print("Not a valid path - please try again")
             output_file = str(input())
 
