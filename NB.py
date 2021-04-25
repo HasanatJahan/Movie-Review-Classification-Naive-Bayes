@@ -44,7 +44,7 @@ import math
 # output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.txt'
 
 # global variable for num 
-num = 2
+# num = 0
 
 """
 Function to initialize the classifier 
@@ -103,7 +103,7 @@ def initialize_classifier():
             print("Not a valid path - please try again")
             output_file = str(input())
 
-    build_parameter_file(training_file, testing_file, parameter_file, output_file)
+    build_parameter_file(training_file, testing_file, parameter_file, output_file, num)
 
 
 
@@ -111,7 +111,7 @@ def initialize_classifier():
 """
 Function used to build the model parameters that would store the model parameters in a file
 """
-def build_parameter_file(training_file, testing_file, parameter_file, output_file):
+def build_parameter_file(training_file, testing_file, parameter_file, output_file, user_input_option):
     model_parameter_dict = dict()
 
     # open training file and read through it 
@@ -201,7 +201,7 @@ def build_parameter_file(training_file, testing_file, parameter_file, output_fil
     
 
     # call naive bayes 
-    naive_bayes(parameter_file, testing_file, output_file, label_dict, num_vocab, num_of_words_in_class)
+    naive_bayes(parameter_file, testing_file, output_file, label_dict, num_vocab, num_of_words_in_class, user_input_option)
 
 
 
@@ -228,7 +228,6 @@ def write_to_output_file(output_file_dict, output_file, accuracy, num_correct, n
         outfile.write("\n" + accuracy_text)
         
         # Also print it to the console 
-        # output_file_end = os.
         print("----------------------------------------------")
         print("Evaluation of the Naive Bayes Model on Dataset")
         print("----------------------------------------------")
@@ -238,7 +237,7 @@ def write_to_output_file(output_file_dict, output_file, accuracy, num_correct, n
                 
 
 
-def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, label_dict, num_vocab, num_of_words_in_class):
+def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, label_dict, num_vocab, num_of_words_in_class, user_input_option):
     output_file_dict = dict()
     num_correct = 0
     num_incorrect = 0
@@ -269,7 +268,7 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
                 for word, word_count in value.items():
                     prob_name = "P(" +  word   + "|" + label + ")"
 
-                    # this is to deal with test words not in train
+                    # this is to deal with test words not in training
                     if prob_name not in parameter_dict:
                         parameter_dict[prob_name] = 1 / (num_of_words_in_class[label] + num_vocab)
 
@@ -297,10 +296,36 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
         output_file_dict[example_num] = vector_dict
         example_num += 1  
 
-    # calculate the accuracy 
-    accuracy = (num_correct / len(testing_data)) * 100
-    # Now to write to output file 
-    write_to_output_file(output_file_dict, output_prediction_file, accuracy, num_correct, num_incorrect, num_of_test_docs)
+
+    # if it's the small dataset then write to the file 
+    if user_input_option == 1:
+        col_string = ""
+        first_row_text = ""
+        count = 0
+        with open(os.path.normpath(output_prediction_file), 'w') as outfile:
+            for vector in output_file_dict:
+                for column in output_file_dict[vector].items():
+
+                    if count == 0:
+                        first_row_text += "|   " + str(column[0]) +  "    "
+                    col_string += "          " + str(column[1]) 
+                
+                if count == 0:
+                    outfile.write(first_row_text + "\n")
+                outfile.write(col_string + "\n")
+                count+=1
+        print("----------------------------------------------")
+        print("Evaluation of the Naive Bayes Model on Dataset")
+        print("----------------------------------------------")
+        print(f"The results have been written to {os.path.normpath(output_prediction_file)}")
+        print(first_row_text)
+        print(col_string)
+
+    # calculate the accuracy and write to file 
+    elif user_input_option != 1: 
+        accuracy = (num_correct / len(testing_data)) * 100
+        # Now to write to output file 
+        write_to_output_file(output_file_dict, output_prediction_file, accuracy, num_correct, num_incorrect, num_of_test_docs)
 
 
 # build_parameter_file(training_file, testing_file, parameter_file, output_file)
