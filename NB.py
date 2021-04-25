@@ -21,30 +21,7 @@ and the other columns are feature values.
 import json
 import os 
 import math
-# Here we would have input from the command line but for how we have placeholders 
 
-# for the main movie review
-# training_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
-# testing_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
-# parameter_file = 'movie-review-HW2/movie-review-BOW.NB'
-# output_file = 'movie-review-HW2/output.txt'
-
-
-# for experimental review with additional features 
-# training_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
-# testing_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
-# parameter_file = 'movie-review-HW2/movie-review-BOW-experiment.NB'
-# output_file = 'movie-review-HW2/experiment-output.txt'
-
-
-# for small movie review file 
-# training_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/train_feature_vectors.json'
-# testing_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/test_feature_vectors.json'
-# parameter_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/movie_review_small.NB'
-# output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.txt'
-
-# global variable for num 
-# num = 0
 
 """
 Function to initialize the classifier 
@@ -127,7 +104,9 @@ def train_naive_bayes(training_file, testing_file, parameter_file, output_file, 
     vocab_dict = dict()
 
     # iterate through the dictionary to draw out the labels to create prior probability 
+    # for each vector 
     for i in training_data:
+        # inside the vector - it's a dictionary
         for key, value in i.items():
             if key not in label_dict:
                 label_dict[key] = 1 
@@ -136,7 +115,7 @@ def train_naive_bayes(training_file, testing_file, parameter_file, output_file, 
             else:
                 label_dict[key] += 1 
             
-            
+            # for each word in the vector 
             for word, word_count in value.items():
                 if key in num_of_words_in_class:
                     num_of_words_in_class[key] += word_count
@@ -148,13 +127,20 @@ def train_naive_bayes(training_file, testing_file, parameter_file, output_file, 
                 else:
                     vocab_dict[word] += word_count
 
-                
-                if word not in class_BOW[key]:
-                    class_BOW[key][word] = word_count
+                # for all evaluations other than binary 
+                if user_input_option != 3: 
+                    if word not in class_BOW[key]:
+                        class_BOW[key][word] = word_count
+                    else:
+                        class_BOW[key][word] += word_count
+                # for binary naive bayes 
                 else:
-                    class_BOW[key][word] += word_count
+                    if word not in class_BOW[key]:
+                        class_BOW[key][word] = 1
+                    else:
+                        class_BOW[key][word] += 1
 
-
+    # get the number of vocabulary words in training
     num_vocab = len(vocab_dict)
 
     # print(f"This is num vocab {num_vocab}")
@@ -182,8 +168,6 @@ def train_naive_bayes(training_file, testing_file, parameter_file, output_file, 
             model_parameter_dict[prob_label_name] = calculated_prob
     
  
-    # TODO: CREATE MORE EXPERIMENTAL PARAMS HERE
-
 
     # print(model_parameter_dict)
     # now to write to the parameter file 
