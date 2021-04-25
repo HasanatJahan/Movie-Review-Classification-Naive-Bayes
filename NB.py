@@ -23,23 +23,26 @@ import os
 import math
 # Here we would have input from the command line but for how we have placeholders 
 
+# for the main movie review
+# training_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
+# testing_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
+# parameter_file = 'movie-review-HW2/movie-review-BOW.NB'
+# output_file = 'movie-review-HW2/output.txt'
+
+
+# for experimental review with additional features 
 training_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
 testing_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
-parameter_file = 'movie-review-HW2/movie-review-BOW.NB'
-output_file = 'movie-review-HW2/output.txt'
-
-# NOTE: TODO : ASK DANIELLE IF TERMINAL INPUT IS REQUIRED 
-# TODO: TRY TO OPTIMIZE PREPROCESS.PY - WILL SHE RUN IT 
-# TODO: ADD EXPERIMENTAL FEATURES AND MAKE NOTE OF THEM
-# TODO: COMPLETE REPORT BASED ON FINDINGS 
+parameter_file = 'movie-review-HW2/movie-review-BOW-experiment.NB'
+output_file = 'movie-review-HW2/experiment-output.txt'
 
 
-
-# trying with the small file 
+# for small movie review file 
 # training_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/train_feature_vectors.json'
 # testing_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/test_feature_vectors.json'
 # parameter_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/movie_review_small.NB'
 # output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.txt'
+
 
 
 """
@@ -205,9 +208,6 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
                     else:
                         vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name]))
                 
-                # NOTE: WAS UPTO HERE - WHY IS LABEL COL NAME GIVING KEYERROR
-                # NOTE: this does not seem like a good solution but I will check again
-
 
                 if label_col_name in vector_dict and vector_dict[label_col_name] > max_val:
                     max_val = vector_dict[label_col_name]
