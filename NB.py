@@ -244,7 +244,9 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
         predicted_label = ""
         vector_dict = dict()
         vector_dict["Example"] = example_num
-        
+
+        word_account = dict()
+
         for key, value in vector.items():
             for label in label_dict:
                 label_col_name = label + " Prediction"
@@ -256,13 +258,30 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
                     if prob_name not in parameter_dict:
                         parameter_dict[prob_name] = 1 / (num_of_words_in_class[label] + num_vocab)
 
-
                     if label_col_name in vector_dict:
                         param_val = parameter_dict[prob_name]
                         vector_dict[label_col_name] += math.log10(param_val)
                     else:
                         vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name]))
-                
+                    
+                    # NOTE: If we had counted test words once like training - then accuracy goes down a lot 
+                    # for BOW naive bayes classification
+                    # if user_input_option != 3:    
+                    #     if label_col_name in vector_dict:
+                    #         param_val = parameter_dict[prob_name]
+                    #         vector_dict[label_col_name] += math.log10(param_val)
+                    #     else:
+                    #         vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name]))
+                    
+                    # # for binary naive bayes classification
+                    # else:
+                    #     if word not in word_account:
+                    #         if label_col_name in vector_dict:
+                    #             param_val = parameter_dict[prob_name]
+                    #             vector_dict[label_col_name] += math.log10(param_val)
+                    #         else:
+                    #             vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name]))
+                    #     word_account[word] = 1
 
                 if label_col_name in vector_dict and vector_dict[label_col_name] > max_val:
                     max_val = vector_dict[label_col_name]
