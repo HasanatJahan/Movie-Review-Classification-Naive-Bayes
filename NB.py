@@ -103,7 +103,7 @@ def initialize_classifier():
             print("Not a valid path - please try again")
             output_file = str(input())
 
-    build_parameter_file(training_file, testing_file, parameter_file, output_file, num)
+    train_naive_bayes(training_file, testing_file, parameter_file, output_file, num)
 
 
 
@@ -111,7 +111,7 @@ def initialize_classifier():
 """
 Function used to build the model parameters that would store the model parameters in a file
 """
-def build_parameter_file(training_file, testing_file, parameter_file, output_file, user_input_option):
+def train_naive_bayes(training_file, testing_file, parameter_file, output_file, user_input_option):
     model_parameter_dict = dict()
 
     # open training file and read through it 
@@ -148,6 +148,7 @@ def build_parameter_file(training_file, testing_file, parameter_file, output_fil
                 else:
                     vocab_dict[word] += word_count
 
+                
                 if word not in class_BOW[key]:
                     class_BOW[key][word] = word_count
                 else:
@@ -181,8 +182,7 @@ def build_parameter_file(training_file, testing_file, parameter_file, output_fil
             model_parameter_dict[prob_label_name] = calculated_prob
     
  
-    # NOTE: CREATE MORE EXPERIMENTAL PARAMS HERE
-    # TODO: CREATE EXPERIMENTAL PARAMS  
+    # TODO: CREATE MORE EXPERIMENTAL PARAMS HERE
 
 
     # print(model_parameter_dict)
@@ -201,7 +201,7 @@ def build_parameter_file(training_file, testing_file, parameter_file, output_fil
     
 
     # call naive bayes 
-    naive_bayes(parameter_file, testing_file, output_file, label_dict, num_vocab, num_of_words_in_class, user_input_option)
+    test_naive_bayes(parameter_file, testing_file, output_file, label_dict, num_vocab, num_of_words_in_class, user_input_option)
 
 
 
@@ -237,7 +237,7 @@ def write_to_output_file(output_file_dict, output_file, accuracy, num_correct, n
                 
 
 
-def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, label_dict, num_vocab, num_of_words_in_class, user_input_option):
+def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file, label_dict, num_vocab, num_of_words_in_class, user_input_option):
     output_file_dict = dict()
     num_correct = 0
     num_incorrect = 0
