@@ -31,10 +31,10 @@ import math
 
 
 # for experimental review with additional features 
-training_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
-testing_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
-parameter_file = 'movie-review-HW2/movie-review-BOW-experiment.NB'
-output_file = 'movie-review-HW2/experiment-output.txt'
+# training_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
+# testing_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
+# parameter_file = 'movie-review-HW2/movie-review-BOW-experiment.NB'
+# output_file = 'movie-review-HW2/experiment-output.txt'
 
 
 # for small movie review file 
@@ -42,6 +42,69 @@ output_file = 'movie-review-HW2/experiment-output.txt'
 # testing_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/test_feature_vectors.json'
 # parameter_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/movie_review_small.NB'
 # output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.txt'
+
+# global variable for num 
+num = 2
+
+"""
+Function to initialize the classifier 
+"""
+def initialize_classifier():	
+    print("Hello! Welcome to Naive Bayes Classifier for Movie Review Prediction")
+    print("Please pick which a number for file you would like to run the program on")
+    print("1. Small Movie Review Dataset with BOW Parameters")
+    print("2. Movie Review Dataset with BOW Parameters")
+    print("3. Movie Review Dataset with BOW features and Experimental Parameters")
+    print("4. Your own input files")
+
+    num = int(input())
+    # small review 
+    if num == 1:
+        training_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/train_feature_vectors.json'
+        testing_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/test_feature_vectors.json'
+        parameter_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/movie_review_small.NB'
+        output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.txt'
+
+    # movie review 
+    if num == 2:
+        training_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
+        testing_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
+        parameter_file = 'movie-review-HW2/movie-review-BOW.NB'
+        output_file = 'movie-review-HW2/output.txt'   
+
+    if num == 3:
+        training_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
+        testing_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
+        parameter_file = 'movie-review-HW2/movie-review-BOW-experiment.NB'
+        output_file = 'movie-review-HW2/experiment-output.txt'    
+    
+    if num == 4:
+        print("Input path of training folder with label folders inside")
+        training_file = str(input())
+        while not path.exists(training_file):
+            print("Not a valid path - please try again")
+            training_file = str(input())
+        
+        print("Input path of testing folder with label folders inside")
+        testing_file = str(input())
+        while not path.exists(testing_file):
+            print("Not a valid path - please try again")
+            testing_file = str(input())
+        
+        print("Input path of parameter file - it should be a .NB format")
+        parameter_file = str(input())
+        while not path.exists(parameter_file):
+            print("Not a valid path - please try again")
+            parameter_file = str(input())
+
+        print("Input path of output file - it should be a .txt format for easy reading")
+        output_file = str(input())
+        while not path.exists(output_file):
+            print("Not a valid path - please try again")
+            output_file = str(input())
+
+    build_parameter_file(training_file, testing_file, parameter_file, output_file)
+
 
 
 
@@ -118,7 +181,8 @@ def build_parameter_file(training_file, testing_file, parameter_file, output_fil
             model_parameter_dict[prob_label_name] = calculated_prob
     
  
-    # NOTE: CREATE MORE EXPERIMENTAL PARAMS HERE 
+    # NOTE: CREATE MORE EXPERIMENTAL PARAMS HERE
+    # TODO: CREATE EXPERIMENTAL PARAMS  
 
 
     # print(model_parameter_dict)
@@ -159,9 +223,17 @@ def write_to_output_file(output_file_dict, output_file, accuracy, num_correct, n
             outfile.write(col_string + "\n")
             count+=1
         
-        accuracy_text = "\nNum correct : " + str(num_correct) + "\n" + "Num incorrect : " + str(num_incorrect) + "\n" + "Num of documents : " + str(num_of_test_docs) + "\n" + "Accuracy: " + str(accuracy) + " %\n"
+        accuracy_text = "Num correct : " + str(num_correct) + "\n" + "Num incorrect : " + str(num_incorrect) + "\n" + "Num of documents : " + str(num_of_test_docs) + "\n" + "Accuracy: " + str(accuracy) + " %\n"
         # outfile.write("Accuracy: " + str(accuracy) + " %\n")
-        outfile.write(accuracy_text)
+        outfile.write("\n" + accuracy_text)
+        
+        # Also print it to the console 
+        # output_file_end = os.
+        print("----------------------------------------------")
+        print("Evaluation of the Naive Bayes Model on Dataset")
+        print("----------------------------------------------")
+        print(f"The results have been written to {os.path.basename(os.path.normpath(output_file))}")
+        print(accuracy_text)
             
                 
 
@@ -231,4 +303,7 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
     write_to_output_file(output_file_dict, output_prediction_file, accuracy, num_correct, num_incorrect, num_of_test_docs)
 
 
-build_parameter_file(training_file, testing_file, parameter_file, output_file)
+# build_parameter_file(training_file, testing_file, parameter_file, output_file)
+
+
+initialize_classifier()
