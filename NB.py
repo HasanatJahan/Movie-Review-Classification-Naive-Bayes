@@ -124,24 +124,30 @@ def build_parameter_file(training_file, testing_file, parameter_file, output_fil
     # call naive bayes 
     naive_bayes(parameter_file, testing_file, output_file, label_dict)
 
-    
+
+
+def write_to_output_file(output_file_dict, output_file):
+    first_row_text = ""
+    count = 0
+
+    with open(os.path.normpath(output_file), 'w') as outfile:
+        for vector in output_file_dict:
+            col_string = ""
+            for column in output_file_dict[vector].items():
+
+                if count == 0:
+                    first_row_text += "|   " + str(column[0]) +  "    "
+                col_string += "          " + str(column[1]) 
+            
+            if count == 0:
+                outfile.write(first_row_text + "\n")
+            outfile.write(col_string + "\n")
+            count+=1
+            
+                
 
 
 def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, label_dict):
-    # NOTE: THE TESTING FILE CONTAINS THE FEATURE VECTORS
-    # NOTE: PLAN - DO NAIVE BAYES FOR BOTH LABELS - CREATE A GENERAL NAIVE BAYES FUNCTION
-    # AND THEN COMPARE THE VALUE RETURNED BY BOTH LABELS AND PICK THE ONE WITH THE LARGER VALUE 
-    # THEN OUTPUT THE PREDICTED LABEL AND OUTPUT LABEL FOR ALL 
-    # NOTE: ALSO INLCUDE THE PROBABILITIES OF EACH CLASS 
-
-
-    # NOTE: FIND A WAY TO DO ACCURACY 
-    # label_evaluation = z
-    # label evaluation has document number,  
-    # prob of each label, 
-    # predicted label 
-    # actual label,
-
     output_file_dict = dict()
     num_correct = 0
     num_of_test_docs = len(testing_file)
@@ -154,12 +160,9 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
 
     f = open(model_parameter_dict)
     parameter_dict = json.load(f)
-    f.close
-
-
+    f.close()
 
     # go through each file 
-
     for vector in testing_data:
         max_val = -10000000
         predicted_label = ""
@@ -203,10 +206,8 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
         output_file_dict[example_num] = vector_dict
         example_num += 1  
 
-    print(output_file_dict)
-
-
+    # Now to write to output file 
+    write_to_output_file(output_file_dict, output_prediction_file)
 
 
 build_parameter_file(training_file, testing_file, parameter_file, output_file)
-
