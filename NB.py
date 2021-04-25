@@ -28,6 +28,12 @@ testing_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
 parameter_file = 'movie-review-HW2/movie-review-BOW.NB'
 output_file = 'movie-review-HW2/output.txt'
 
+# NOTE: TODO : ASK DANIELLE IF TERMINAL INPUT IS REQUIRED 
+# TODO: TRY TO OPTIMIZE PREPROCESS.PY - WILL SHE RUN IT 
+# TODO: ADD EXPERIMENTAL FEATURES AND MAKE NOTE OF THEM
+# TODO: COMPLETE REPORT BASED ON FINDINGS 
+
+
 
 # trying with the small file 
 # training_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/train_feature_vectors.json'
@@ -132,7 +138,7 @@ def build_parameter_file(training_file, testing_file, parameter_file, output_fil
 
 
 
-def write_to_output_file(output_file_dict, output_file, accuracy):
+def write_to_output_file(output_file_dict, output_file, accuracy, num_correct, num_incorrect, num_of_test_docs):
     first_row_text = "   "
     count = 0
 
@@ -150,7 +156,9 @@ def write_to_output_file(output_file_dict, output_file, accuracy):
             outfile.write(col_string + "\n")
             count+=1
         
-        outfile.write("Accuracy: " + str(accuracy) + "%\n")
+        accuracy_text = "\nNum correct : " + str(num_correct) + "\n" + "Num incorrect : " + str(num_incorrect) + "\n" + "Num of documents : " + str(num_of_test_docs) + "\n" + "Accuracy: " + str(accuracy) + " %\n"
+        # outfile.write("Accuracy: " + str(accuracy) + " %\n")
+        outfile.write(accuracy_text)
             
                 
 
@@ -158,7 +166,7 @@ def write_to_output_file(output_file_dict, output_file, accuracy):
 def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, label_dict, num_vocab, num_of_words_in_class):
     output_file_dict = dict()
     num_correct = 0
-    num_of_test_docs = len(testing_file)
+    num_incorrect = 0
     example_num = 1
     parameter_dict = dict()
     
@@ -169,6 +177,8 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
     f = open(model_parameter_dict)
     parameter_dict = json.load(f)
     f.close()
+
+    num_of_test_docs = len(testing_data)
 
     # go through each file 
     for vector in testing_data:
@@ -209,6 +219,8 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
 
             if vector_dict["Predicted Label"] == vector_dict["Actual Label"]:
                 num_correct += 1
+            else:
+                num_incorrect +=1
 
         output_file_dict[example_num] = vector_dict
         example_num += 1  
@@ -216,7 +228,7 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
     # calculate the accuracy 
     accuracy = (num_correct / len(testing_data)) * 100
     # Now to write to output file 
-    write_to_output_file(output_file_dict, output_prediction_file, accuracy)
+    write_to_output_file(output_file_dict, output_prediction_file, accuracy, num_correct, num_incorrect, num_of_test_docs)
 
 
 build_parameter_file(training_file, testing_file, parameter_file, output_file)
