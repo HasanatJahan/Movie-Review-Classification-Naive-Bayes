@@ -31,7 +31,7 @@ def initialize_classifier():
     print("Please pick which a number for file you would like to run the program on")
     print("1. Small Movie Review Dataset with BOW Parameters")
     print("2. Movie Review Dataset with BOW Parameters")
-    print("3. Movie Review Dataset with BOW features and Experimental Parameters")
+    print("3. Movie Review Dataset with Experimental Binary Naive Bayes")
     print("4. Your own input files")
 
     num = int(input())
