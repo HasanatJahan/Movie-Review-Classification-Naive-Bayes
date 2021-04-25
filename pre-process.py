@@ -22,19 +22,15 @@ import string
 # note: change this to take input from terminal regarding file name 
 vocab_file_path = 'movie-review-HW2/aclImdb/imdb.vocab'
 punctuation_list = string.punctuation 
-
-# file_path = 'movie-review-HW2/aclImdb/train'
-# labels = ["pos", "neg"]
+file_path = 'movie-review-HW2/aclImdb/train'
+main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/movie-review-HW2/feature_vectors'
 
 # from here you have the test small files 
 # for train
 # file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/train'
-
 # for test
-file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/test'
-
-
-main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors'
+# file_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/data/test'
+# main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors'
 
 """
 Open the vocabulary file 
@@ -68,7 +64,7 @@ def create_word_list(input_text, vocab_dict):
         #     output_text_list.append(lower_word)
 
         # this part is only for the small review preprocessing
-        if word != "\n":
+        if word != "\n" and word in vocab_dict:
             word = word.strip('\n')
             lower_word = word.lower()
             output_text_list.append(lower_word)
@@ -122,7 +118,6 @@ def preprocess(vocab_dict):
     feature_vectors = []
     
     # labels = ["pos", "neg"]
-    # labels = ["comedy", "action"]
     labels = find_labels(file_path)
 
     type_of_data = os.path.basename(os.path.normpath(file_path))

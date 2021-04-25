@@ -23,11 +23,17 @@ import os
 import math
 # Here we would have input from the command line but for how we have placeholders 
 
-# trying with the small file 
 training_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/train_feature_vectors.json'
 testing_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/test_feature_vectors.json'
 parameter_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/movie_review_small.NB'
 output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.txt'
+
+
+# trying with the small file 
+# training_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/train_feature_vectors.json'
+# testing_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/test_feature_vectors.json'
+# parameter_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/movie_review_small.NB'
+# output_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/output.txt'
 
 
 """
@@ -179,14 +185,12 @@ def naive_bayes(model_parameter_dict, testing_file, output_prediction_file, labe
 
                         # NOTE: checking the dict is only added in for the small movie review 
                         # words not in vocab should be added in with 0 
-                        # ONLY FOR THIS ONE SMALL - DELETE BLOCK LATER 
-                        if prob_name not in parameter_dict and label == "comedy":
-                            param_val = 1/16
-                        elif prob_name not in parameter_dict and label == "action":
-                            param_val = 1/18
-                        else:
-                            param_val = parameter_dict[prob_name]
-                        
+                        # if prob_name not in parameter_dict and label == "comedy":
+                        #     param_val = 1/16
+                        # elif prob_name not in parameter_dict and label == "action":
+                        #     param_val = 1/18
+                        # else:
+                        param_val = parameter_dict[prob_name]
                         vector_dict[label_col_name] += math.log10(param_val)
 
                         # vector_dict[label_col_name] += math.log10(parameter_dict[prob_name])
