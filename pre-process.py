@@ -11,10 +11,10 @@ import string
 vocab_file_path = 'movie-review-HW2/aclImdb/imdb.vocab'
 punctuation_list = string.punctuation 
 # for training data 
-# file_path = 'movie-review-HW2/aclImdb/train'
+file_path = 'movie-review-HW2/aclImdb/train'
 
 # for test data 
-file_path = 'movie-review-HW2/aclImdb/test'
+# file_path = 'movie-review-HW2/aclImdb/test'
 main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/movie-review-HW2/feature_vectors'
 
 # from here you have the test small files 
@@ -30,44 +30,35 @@ Open the vocabulary file
 def get_vocab_dict(vocab_file_path):
     vocab_dict = dict()
     with open(vocab_file_path) as f:
-        vocab_dict = f.read().split()
+        vocab_list = f.read().split()
+    for word in vocab_list:
+        vocab_dict[word] = ""
     return vocab_dict
 
 vocab_dict = get_vocab_dict(vocab_file_path)
+# print(vocab_dict)
 
 """
-Takes input text and creates word list 
+Create a dictionary of word counts based on word list created from input text
 """
-def create_word_list(input_text, vocab_dict):
-    output_text_list = []
-    
+def create_word_count_dict(input_text, vocab_dict):
+
     # remove punctuation
     table_ = str.maketrans('', '', punctuation_list)
     modified_input_text = input_text.translate(table_)
 
     # create input word list 
     input_list = modified_input_text.split(" ")
-
-    for word in input_list:
-        # this part is only for the small review preprocessing
-        if word != "\n" and word in vocab_dict:
-            word = word.strip('\n')
-            lower_word = word.lower()
-            output_text_list.append(lower_word)
-
-    return output_text_list
-
-
-"""
-Create a dictionary of word counts based on word list created from input text
-"""
-def create_word_count_dict(input_list):
     input_word_dict = dict()
+
     for word in input_list:
-        if word not in input_word_dict:
-            input_word_dict[word] = 1
-        else:
-            input_word_dict[word] += 1  
+        if word in vocab_dict:
+        # word = word.strip('\n')
+            lower_word = word.lower()
+            if word not in input_word_dict:
+                input_word_dict[word] = 1
+            else:
+                input_word_dict[word] += 1  
 
     return input_word_dict
 
@@ -102,7 +93,8 @@ Now for the preprocess function
 """
 def preprocess(vocab_dict):
     feature_vectors = []
-    
+    document_text = []
+
     # labels = ["pos", "neg"]
     labels = find_labels(file_path)
 
@@ -111,12 +103,17 @@ def preprocess(vocab_dict):
         label = os.path.basename(os.path.normpath(dirname))
         for filename in filenames:
             if filename.endswith('.txt') and label in labels:
-                f = open(os.path.join(dirname, filename), "r")
-                output_word_list = create_word_list(f.read(), vocab_dict)
-                feature_dict = create_word_count_dict(output_word_list)
-                feature_vectors.append({label: feature_dict})
-                f.close()
+                file_name = os.path.join(dirname, filename)
+                with open(file_name, "r") as file:
+                    document_text.append((label, file.read()))
 
+    for document in document_text:
+        text_of_file = document[1]
+        feature_dict = create_word_count_dict(text_of_file, vocab_dict)
+        label = document[0]
+        feature_vectors.append({label: feature_dict})
+    
+    
     # after all the files have been read 
     # the file name would be different for movie review 
     json_filename = type_of_data + '_feature_vectors.json'
