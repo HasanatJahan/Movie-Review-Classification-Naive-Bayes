@@ -128,24 +128,42 @@ def train_naive_bayes(training_file, testing_file, parameter_file, output_file, 
             
             # for each word in the vector 
             for word, word_count in value.items():
-                if key in num_of_words_in_class:
-                    num_of_words_in_class[key] += word_count
-                else:
-                    num_of_words_in_class[key] = word_count
-                
-                if word not in vocab_dict:
-                    vocab_dict[word] = word_count
-                else:
-                    vocab_dict[word] += word_count
-
                 # for all evaluations other than binary 
                 if user_input_option != 3: 
+                    # populate teh number of words in the class 
+                    if key in num_of_words_in_class:
+                        num_of_words_in_class[key] += word_count
+                    else:
+                        num_of_words_in_class[key] = word_count
+                    
+                    # create a total word dictionary 
+                    if word not in vocab_dict:
+                        vocab_dict[word] = word_count
+                    else:
+                        vocab_dict[word] += word_count
+
+                    # create number of words per class 
                     if word not in class_BOW[key]:
                         class_BOW[key][word] = word_count
                     else:
                         class_BOW[key][word] += word_count
+                
                 # for binary naive bayes 
                 else:
+                    # populate teh number of words in the class 
+                    if key in num_of_words_in_class:
+                        num_of_words_in_class[key] += 1
+                    else:
+                        num_of_words_in_class[key] = 1
+                    
+                    # create a total word dictionary 
+                    if word not in vocab_dict:
+                        vocab_dict[word] = 1
+                    else:
+                        vocab_dict[word] += 1
+
+                    # number of words per class     
+
                     if word not in class_BOW[key]:
                         class_BOW[key][word] = 1
                     else:
