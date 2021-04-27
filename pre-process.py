@@ -71,9 +71,9 @@ def create_word_count_dict(input_text, vocab_dict):
         # this is for normal BOW for all other options
         word = word.strip('\n')
 
-        # if word in vocab_dict:
+        if word in vocab_dict:
         # this is for removing redundant words
-        if word in vocab_dict and word not in redundant_words_dict:
+        # if word in vocab_dict and word not in redundant_words_dict:
             lower_word = word.lower()
             if word not in input_word_dict:
                 input_word_dict[word] = 1
