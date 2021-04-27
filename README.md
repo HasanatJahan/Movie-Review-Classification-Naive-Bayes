@@ -1,5 +1,4 @@
-# Movie Review Classification with Naive Bayes Bag-of-words Features 
-
+# Movie Review Classification with Naive Bayes Bag-of-Word Features 
 
 ## Pre-requisites 
 1. Must have Python 3 installed 
@@ -24,19 +23,21 @@ preprocessing on, and variable 'vocab_file_path' is changed to your desired .voc
 
 
 ## To run for output and view
-1. Open Terminal and navigate to directory containing NB.py, this directory should also include the folder 'movie-review-HW2' and 'small_movie_review' as well as 'preprocess.py'
-2. In terminal, type in below command to run NB.py in Python3
+1. Open Terminal and navigate to directory containing  `NB.py`, this directory should also include the folder 'movie-review-HW2' and 'small_movie_review' as well as `preprocess.py`
+2. In terminal, type in below command to run `NB.py` in Python3
 ```
 python3 NB.py
 ```
 3. The terminal then presents the following options for Naive Bayes classification:
 ```
 Hello! Welcome to Naive Bayes Classifier for Movie Review Prediction
-Please pick which a number for file you would like to run the program on
-1. Small Movie Review Dataset with BOW Parameters
-2. Movie Review Dataset with BOW Parameters
-3. Movie Review Dataset with Experimental Binary Naive Bayes
-4. Your own input files
+Please pick which a number for the investigation results you want to explore
+1. Small Movie Genre Determination with BOW Parameters
+2. Movie Review Classification with BOW Parameters
+3. Movie Review Classification with added Experimental Binary Word Count
+4. Movie Review Classification with added Experimental Removal of Redundant Words
+5. Movie Review Classification with BOW Parameters and document word count parameter
+6. Your own input files
 ```
 Then enter your desired number and press enter for results 
 The accuracy results will present in the terminal and the individual results for files are present in the text file specified by the terminal. 
@@ -51,7 +52,7 @@ Num incorrect : 2727
 Num of documents : 25000
 Accuracy: 89.092 %
 ```
-For option 4, the terminal will walk the user through which file they want for each parameter of the Naive Bayes classifier and then run accordingly. 
+For option 6, the terminal will walk the user through which file they want for each parameter of the Naive Bayes classifier and then run accordingly. The files input for feature vectors must first be pre-processed by `pre-process.py`
 
 #### To view output file 
 To see the relevant output txt file, navigate to mentioned file in the results either from terminal or through GUI and open to see results. 
