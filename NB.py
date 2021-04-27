@@ -7,10 +7,6 @@ import json
 import os 
 import math
 
-# TODO: NOW TO CHECK WHAT'S THE PATTERN IN THE ONES I MISSED 
-# TODO: MAKE BETTER DESCRIPTIONS BELOW 
-# TODO: FIND THE FILES THAT YOU PREDICTED WRONG ON AND MAKE A NOTE OF THAT 
-# TODO: WRITE REPORT ON INVESTIGATION
 
 """
 Function to initialize the classifier 
@@ -113,6 +109,7 @@ def train_naive_bayes(training_file, testing_file, parameter_file, output_file, 
     # get the number of documents 
     num_document = len(training_data)
     label_dict = dict()
+    # holds the general word count in each class 
     class_BOW = dict()
     num_of_words_in_class = dict()
     vocab_dict = dict()
@@ -244,6 +241,10 @@ def test_naive_bayes(model_parameter_file, testing_file, output_prediction_file,
     example_num = 1
     parameter_dict = dict()
 
+    # hold the incorrectly predicted vectors for later analysis 
+    incorrect_prediction_vectors = []
+    correct_prediction_vectors = []
+
     f = open(testing_file)
     testing_data = json.load(f)
     f.close()
@@ -305,12 +306,17 @@ def test_naive_bayes(model_parameter_file, testing_file, output_prediction_file,
 
             if vector_dict["Predicted Label"] == vector_dict["Actual Label"]:
                 num_correct += 1
+                correct_prediction_vectors.append(vector)
             else:
                 num_incorrect +=1
+                incorrect_prediction_vectors.append(vector)
 
         output_file_dict[example_num] = vector_dict
         example_num += 1  
 
+    # DECIDED TO GO WITH BOW FEATURES BY THEMSELVES 
+    if user_input_option == 2:
+        analyse_incorrect_predictions(incorrect_prediction_vectors, correct_prediction_vectors)
 
     # if it's the small dataset then write to the file 
     if user_input_option == 1:
@@ -343,6 +349,52 @@ def test_naive_bayes(model_parameter_file, testing_file, output_prediction_file,
         write_to_output_file(output_file_dict, output_prediction_file, accuracy, num_correct, num_incorrect, num_of_test_docs)
     
 
+def analyse_incorrect_predictions(incorrect_prediction_vectors, correct_prediction_vectors):
+    vector_word_dict = dict()
+    vector_word_dict_correct = dict()
+    label_dict = dict()
+    label_word_count = dict()
+    num_examples_wrong = len(incorrect_prediction_vectors)
+    num_examples_correct = len(correct_prediction_vectors)
 
+    for example in incorrect_prediction_vectors:
+        for vector in example.items():
+            if vector[0] in label_dict:
+                label_dict[vector[0]] += 1
+            else:
+                label_dict[vector[0]] = 1
+
+            for word, word_count in vector[1].items():
+                if word in vector_word_dict:
+                    vector_word_dict[word] += word_count
+                else:
+                    vector_word_dict[word] = word_count
+
+
+                label_word_count[vector[0]] = word_count
+
+    for example in correct_prediction_vectors:
+        for vector in example.items(): 
+            for word, word_count in vector[1].items():
+                if word in vector_word_dict_correct:
+                    vector_word_dict_correct[word] += word_count
+                else:
+                    vector_word_dict_correct[word] = word_count  
+
+    total_predicted_incorrect = sum(label_dict.values())
+    positive_instances = 0
+    negative_instances = 0
+    for label, value in label_dict.items():
+        calculate_percent = value/total_predicted_incorrect * 100 
+        print(f"Percent of {label} incorrect {calculate_percent} %")
+    
+    average_word_count_per_example = sum(vector_word_dict.values()) / num_examples_wrong
+    print(f"Average word count per example in incorrect classification {average_word_count_per_example}")
+
+    average_word_count_per_example = sum(vector_word_dict_correct.values()) / num_examples_correct
+    print(f"Average word count per example in correct classification {average_word_count_per_example}")
+
+
+                
 
 initialize_classifier()

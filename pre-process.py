@@ -48,16 +48,6 @@ def create_word_count_dict(input_text, vocab_dict):
     table_ = str.maketrans('', '', punctuation_list)
     modified_input_text = input_text.translate(table_)
 
-    # testing with punctuation list 
-    # punctuation_to_remove = {'"', '*', '+', '.', '/', '<', '>', '@', '^', '_', '`', '{', '|', '~', ','}
-    # modified_input_text = ""
-    # for char in input_text:
-    #     if char == '!' or char == "?":
-    #         modified_input_text += " " + char
-    #     elif char not in punctuation_to_remove:
-    #         modified_input_text += char.lower()
-
-
     # create input word list 
     input_list = modified_input_text.split(" ")
     input_word_dict = dict()
