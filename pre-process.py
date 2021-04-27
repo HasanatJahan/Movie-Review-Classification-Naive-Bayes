@@ -11,10 +11,10 @@ import string
 vocab_file_path = 'movie-review-HW2/aclImdb/imdb.vocab'
 punctuation_list = string.punctuation 
 # for training data 
-# file_path = 'movie-review-HW2/aclImdb/train'
+file_path = 'movie-review-HW2/aclImdb/train'
 
 # for test data 
-file_path = 'movie-review-HW2/aclImdb/test'
+# file_path = 'movie-review-HW2/aclImdb/test'
 main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/movie-review-HW2/feature_vectors'
 
 # from here you have the test small files 
@@ -68,12 +68,12 @@ def create_word_count_dict(input_text, vocab_dict):
     }
 
     for word in input_list:
-        # this is for normal BOW for all other options 
-        # if word in vocab_dict:
+        # this is for normal BOW for all other options
+        word = word.strip('\n')
 
+        # if word in vocab_dict:
         # this is for removing redundant words
         if word in vocab_dict and word not in redundant_words_dict:
-            word = word.strip('\n')
             lower_word = word.lower()
             if word not in input_word_dict:
                 input_word_dict[word] = 1
