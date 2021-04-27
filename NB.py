@@ -333,8 +333,8 @@ def test_naive_bayes(model_parameter_file, testing_file, output_prediction_file,
         example_num += 1  
 
     # DECIDED TO GO WITH BOW FEATURES BY THEMSELVES 
-    if user_input_option == 2:
-        analyse_incorrect_predictions(incorrect_prediction_vectors, correct_prediction_vectors)
+    # if user_input_option == 2:
+    #     analyse_incorrect_predictions(incorrect_prediction_vectors, correct_prediction_vectors)
 
     # if it's the small dataset then write to the file 
     if user_input_option == 1:
