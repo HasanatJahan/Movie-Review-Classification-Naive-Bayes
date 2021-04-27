@@ -23,7 +23,7 @@ def initialize_classifier():
 
 
     num = int(input())
-    while type(num) != int or num <=1 or num >=6:
+    while type(num) != int or num < 1 or num > 6:
         print("Please enter a valid number between 1 to 6")
         num = int(input())
 
@@ -158,6 +158,7 @@ def train_naive_bayes(training_file, testing_file, parameter_file, output_file, 
     # print(f"Number of words in class {num_of_words_in_class}")
     # print(f"Label dict {label_dict}")
     # print(f"vocab dict {vocab_dict}")
+    # print(f"num of vocab words {len(vocab_dict)}")
 
     # now to calculate prior probability of each label and add it to dictionary 
     for label in label_dict:
@@ -238,7 +239,7 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
     num_incorrect = 0
     example_num = 1
     parameter_dict = dict()
-        
+
     f = open(testing_file)
     testing_data = json.load(f)
     f.close()
@@ -249,7 +250,6 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
 
     num_of_test_docs = len(testing_data)
 
-    checking_count = 0
     # go through each file 
     for vector in testing_data:
         max_val = -10000000
