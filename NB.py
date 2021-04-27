@@ -237,7 +237,7 @@ def write_to_output_file(output_file_dict, output_file, accuracy, num_correct, n
                 
 
 
-def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file, label_dict, num_vocab, num_of_words_in_class, user_input_option):
+def test_naive_bayes(model_parameter_file, testing_file, output_prediction_file, label_dict, num_vocab, num_of_words_in_class, user_input_option):
     output_file_dict = dict()
     num_correct = 0
     num_incorrect = 0
@@ -248,7 +248,7 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
     testing_data = json.load(f)
     f.close()
 
-    f = open(model_parameter_dict)
+    f = open(model_parameter_file)
     parameter_dict = json.load(f)
     f.close()
 
@@ -258,6 +258,8 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
     for vector in testing_data:
         max_val = -10000000
         predicted_label = ""
+
+        # this is to hold the information about this vector 
         vector_dict = dict()
         vector_dict["Example"] = example_num
 
@@ -268,6 +270,7 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
             # number of words per document
             num_of_words_in_doc = sum(value.values())
 
+            # make a prediction for each label for a particular vector 
             for label in label_dict:
                 label_col_name = label + " Prediction"
                 label_prob_name  = "P("+ label + ")"
@@ -285,11 +288,11 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
                     else:
                         # this is the first prob of all naive bayes classifier expect 
                         if user_input_option != 5:
-                            vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name]))
+                            vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + (math.log10((parameter_dict[prob_name])) * word_count)
                         
                         # log of word count per document feature added 
                         else:
-                            vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name])) + math.log10(num_of_words_in_doc)
+                            vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + (math.log10((parameter_dict[prob_name])) * word_count) + math.log10(num_of_words_in_doc)
 
 
                 if label_col_name in vector_dict and vector_dict[label_col_name] > max_val:
@@ -334,7 +337,7 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
         print(col_string)
 
     # calculate the accuracy and write to file 
-    elif user_input_option != 1: 
+    elif user_input_option != 1:
         accuracy = (num_correct / len(testing_data)) * 100
         # Now to write to output file 
         write_to_output_file(output_file_dict, output_prediction_file, accuracy, num_correct, num_incorrect, num_of_test_docs)

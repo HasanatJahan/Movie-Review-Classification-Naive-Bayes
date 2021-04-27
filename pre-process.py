@@ -11,10 +11,11 @@ import string
 vocab_file_path = 'movie-review-HW2/aclImdb/imdb.vocab'
 punctuation_list = string.punctuation 
 # for training data 
-file_path = 'movie-review-HW2/aclImdb/train'
+# file_path = 'movie-review-HW2/aclImdb/train
 
 # for test data 
-# file_path = 'movie-review-HW2/aclImdb/test'
+file_path = 'movie-review-HW2/aclImdb/test'
+
 main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/movie-review-HW2/feature_vectors'
 
 # from here you have the test small files 
@@ -43,9 +44,19 @@ Create a dictionary of word counts based on word list created from input text
 """
 def create_word_count_dict(input_text, vocab_dict):
 
-    # remove punctuation
+    # # remove punctuation
     table_ = str.maketrans('', '', punctuation_list)
     modified_input_text = input_text.translate(table_)
+
+    # testing with punctuation list 
+    # punctuation_to_remove = {'"', '*', '+', '.', '/', '<', '>', '@', '^', '_', '`', '{', '|', '~', ','}
+    # modified_input_text = ""
+    # for char in input_text:
+    #     if char == '!' or char == "?":
+    #         modified_input_text += " " + char
+    #     elif char not in punctuation_to_remove:
+    #         modified_input_text += char.lower()
+
 
     # create input word list 
     input_list = modified_input_text.split(" ")
@@ -118,7 +129,10 @@ def preprocess(vocab_dict):
     # labels = ["pos", "neg"]
     labels = find_labels(file_path)
 
+    # whether it's train or test 
     type_of_data = os.path.basename(os.path.normpath(file_path))
+
+    # walk through each file in each label 
     for dirname, _, filenames in os.walk(file_path):
         label = os.path.basename(os.path.normpath(dirname))
         for filename in filenames:
@@ -130,18 +144,19 @@ def preprocess(vocab_dict):
     for document in document_text:
         text_of_file = document[1]
         feature_dict = create_word_count_dict(text_of_file, vocab_dict)
-        label = document[0]
-        feature_vectors.append({label: feature_dict})
+        label_of_doc = document[0]
+        feature_vectors.append({label_of_doc: feature_dict})
     
     
     # after all the files have been read 
     # the file name would be different for movie review 
 
+    # FEATURE VECTOR FILENAME DETERMINED HERE 
 
-    # json_filename = type_of_data + '_feature_vectors.json'
+    json_filename = type_of_data + '_feature_vectors.json'
 
     # filename for experimental features
-    json_filename = "experimental_" + type_of_data + '_feature_vectors.json'
+    # json_filename = "experimental_" + type_of_data + '_feature_vectors.json'
 
     write_json(main_directory_path, json_filename, feature_vectors)
 
