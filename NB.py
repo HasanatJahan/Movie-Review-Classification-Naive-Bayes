@@ -7,13 +7,17 @@ import json
 import os 
 import math
 
+# TODO: NOW TO CHECK WHAT'S THE PATTERN IN THE ONES I MISSED 
+# TODO: MAKE BETTER DESCRIPTIONS BELOW 
+# TODO: FIND THE FILES THAT YOU PREDICTED WRONG ON AND MAKE A NOTE OF THAT 
+# TODO: WRITE REPORT ON INVESTIGATION
 
 """
 Function to initialize the classifier 
 """
 def initialize_classifier():	
     print("Hello! Welcome to Naive Bayes Classifier for Movie Review Prediction")
-    print("Please pick which a number for file you would like to run the program on")
+    print("Please pick which a number for the investigation results you want to explore")
     print("1. Small Movie Genre Determination with BOW Parameters")
     print("2. Movie Review Classification with BOW Parameters")
     print("3. Movie Review Classification with added Experimental Binary Word Count")
@@ -287,25 +291,6 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
                         else:
                             vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name])) + math.log10(num_of_words_in_doc)
 
-                    
-                    # NOTE: If we had counted test words once like training - then accuracy goes down a lot 
-                    # for BOW naive bayes classification
-                    # if user_input_option != 3:    
-                    #     if label_col_name in vector_dict:
-                    #         param_val = parameter_dict[prob_name]
-                    #         vector_dict[label_col_name] += math.log10(param_val)
-                    #     else:
-                    #         vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name]))
-                    
-                    # # for binary naive bayes classification
-                    # else:
-                    #     if word not in word_account:
-                    #         if label_col_name in vector_dict:
-                    #             param_val = parameter_dict[prob_name]
-                    #             vector_dict[label_col_name] += math.log10(param_val)
-                    #         else:
-                    #             vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name]))
-                    #     word_account[word] = 1
 
                 if label_col_name in vector_dict and vector_dict[label_col_name] > max_val:
                     max_val = vector_dict[label_col_name]
