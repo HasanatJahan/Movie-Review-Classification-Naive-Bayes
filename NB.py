@@ -14,12 +14,20 @@ Function to initialize the classifier
 def initialize_classifier():	
     print("Hello! Welcome to Naive Bayes Classifier for Movie Review Prediction")
     print("Please pick which a number for file you would like to run the program on")
-    print("1. Small Movie Review Dataset with BOW Parameters")
-    print("2. Movie Review Dataset with BOW Parameters")
-    print("3. Movie Review Dataset with Experimental Binary Naive Bayes")
-    print("4. Your own input files")
+    print("1. Small Movie Genre Determination with BOW Parameters")
+    print("2. Movie Review Classification with BOW Parameters")
+    print("3. Movie Review Classification with added Experimental Binary Word Count")
+    print("4. Movie Review Classification with added Experimental Removal of Redundant Words")
+    print("5. Movie Review Classification with BOW Parameters and document word count parameter")
+    print("6. Your own input files")
+
 
     num = int(input())
+    while type(num) != int or num <=1 or num >=6:
+        print("Please enter a valid number between 1 to 6")
+        num = int(input())
+
+
     # small review 
     if num == 1:
         training_file = '/Users/jahan/Desktop/CS381/Homework2/small_movie_review/feature_vectors/train_feature_vectors.json'
@@ -34,13 +42,30 @@ def initialize_classifier():
         parameter_file = 'movie-review-HW2/movie-review-BOW.NB'
         output_file = 'movie-review-HW2/output.txt'   
 
+    # BINARY COUNTS
     if num == 3:
         training_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
         testing_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
-        parameter_file = 'movie-review-HW2/movie-review-BOW-experiment.NB'
+        parameter_file = 'movie-review-HW2/movie-review-BOW.NB'
         output_file = 'movie-review-HW2/experiment-output.txt'    
     
+    # REDUNDANT WORD REMOVAL
     if num == 4:
+        training_file = 'movie-review-HW2/feature_vectors/experimental_train_feature_vectors.json'
+        testing_file = 'movie-review-HW2/feature_vectors/experimental_test_feature_vectors.json'
+        parameter_file = 'movie-review-HW2/movie-review-BOW.NB'
+        output_file = 'movie-review-HW2/experiment-output-1.txt'
+
+    # ADDING THE EXTRA FEATURE OF WORD COUNT PER DOCUMENT 
+    if num == 5:
+        training_file = 'movie-review-HW2/feature_vectors/train_feature_vectors.json'
+        testing_file = 'movie-review-HW2/feature_vectors/test_feature_vectors.json'
+        parameter_file = 'movie-review-HW2/movie-review-BOW.NB'
+        output_file = 'movie-review-HW2/experiment-output-2.txt'
+
+
+    # USER FILE INPUT
+    if num == 6:
         print("Input path of training folder with label folders inside")
         training_file = str(input())
         while not os.path.exists(training_file):
@@ -213,7 +238,7 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
     num_incorrect = 0
     example_num = 1
     parameter_dict = dict()
-    
+        
     f = open(testing_file)
     testing_data = json.load(f)
     f.close()
@@ -224,6 +249,7 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
 
     num_of_test_docs = len(testing_data)
 
+    checking_count = 0
     # go through each file 
     for vector in testing_data:
         max_val = -10000000
@@ -231,12 +257,17 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
         vector_dict = dict()
         vector_dict["Example"] = example_num
 
-        word_account = dict()
+        # word_account = dict()
 
         for key, value in vector.items():
+
+            # number of words per document
+            num_of_words_in_doc = sum(value.values())
+
             for label in label_dict:
                 label_col_name = label + " Prediction"
                 label_prob_name  = "P("+ label + ")"
+
                 for word, word_count in value.items():
                     prob_name = "P(" +  word   + "|" + label + ")"
 
@@ -248,7 +279,14 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
                         param_val = parameter_dict[prob_name]
                         vector_dict[label_col_name] += math.log10(param_val)
                     else:
-                        vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name]))
+                        # this is the first prob of all naive bayes classifier expect 
+                        if user_input_option != 5:
+                            vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name]))
+                        
+                        # log of word count per document feature added 
+                        else:
+                            vector_dict[label_col_name] = math.log10((parameter_dict[label_prob_name])) + math.log10((parameter_dict[prob_name])) + math.log10(num_of_words_in_doc)
+
                     
                     # NOTE: If we had counted test words once like training - then accuracy goes down a lot 
                     # for BOW naive bayes classification
@@ -315,6 +353,7 @@ def test_naive_bayes(model_parameter_dict, testing_file, output_prediction_file,
         accuracy = (num_correct / len(testing_data)) * 100
         # Now to write to output file 
         write_to_output_file(output_file_dict, output_prediction_file, accuracy, num_correct, num_incorrect, num_of_test_docs)
+    
 
 
 

@@ -11,10 +11,10 @@ import string
 vocab_file_path = 'movie-review-HW2/aclImdb/imdb.vocab'
 punctuation_list = string.punctuation 
 # for training data 
-file_path = 'movie-review-HW2/aclImdb/train'
+# file_path = 'movie-review-HW2/aclImdb/train'
 
 # for test data 
-# file_path = 'movie-review-HW2/aclImdb/test'
+file_path = 'movie-review-HW2/aclImdb/test'
 main_directory_path = '/Users/jahan/Desktop/CS381/Homework2/movie-review-HW2/feature_vectors'
 
 # from here you have the test small files 
@@ -51,9 +51,29 @@ def create_word_count_dict(input_text, vocab_dict):
     input_list = modified_input_text.split(" ")
     input_word_dict = dict()
 
+    redundant_words_dict = {
+        "the" : "", 
+        "a": "", 
+        "an": "", 
+        "from": "", 
+        "across": "", 
+        "along": "", 
+        "in": "", 
+        "by": "", 
+        "upon": "", 
+        "with": "", 
+        "within": "", 
+        "of": "", 
+        "to": "" 
+    }
+
     for word in input_list:
-        if word in vocab_dict:
-        # word = word.strip('\n')
+        # this is for normal BOW for all other options 
+        # if word in vocab_dict:
+
+        # this is for removing redundant words
+        if word in vocab_dict and word not in redundant_words_dict:
+            word = word.strip('\n')
             lower_word = word.lower()
             if word not in input_word_dict:
                 input_word_dict[word] = 1
@@ -116,7 +136,12 @@ def preprocess(vocab_dict):
     
     # after all the files have been read 
     # the file name would be different for movie review 
-    json_filename = type_of_data + '_feature_vectors.json'
+
+
+    # json_filename = type_of_data + '_feature_vectors.json'
+
+    # filename for experimental features
+    json_filename = "experimental_" + type_of_data + '_feature_vectors.json'
 
     write_json(main_directory_path, json_filename, feature_vectors)
 
